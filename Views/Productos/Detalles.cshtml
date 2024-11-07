@@ -1,0 +1,11 @@
+﻿@model EntrevistaBack.Models.Producto
+
+@{
+    ViewData["Title"] = "Detalles del Producto";
+}
+
+<h2>@Model.Nombre</h2>
+<p><strong>Categoría:</strong> @Model.Categoria</p>
+<p><strong>Descripción:</strong> @Model.Descripcion</p>
+<p><strong>Precio:</strong> @Model.Precio</p>
+<img src="@Model.ImagenUrl" alt="Imagen del Producto" width="200" />

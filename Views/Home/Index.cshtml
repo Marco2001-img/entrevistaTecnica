@@ -1,0 +1,95 @@
+﻿@model List< EntrevistaBack.Models.Producto>
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<h2>Listado de Productos</h2>
+
+<!-- Campo de búsqueda -->
+<input type="text" id="search" class="form-control" placeholder="Buscar productos por nombre" onkeyup="buscarProductos()" />
+
+<br>
+
+<!-- Tabla de productos -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="tablaProductos">
+        @foreach (var producto in Model)
+        {
+            <tr>
+                <td>@producto.Nombre</td>
+                <td>@producto.Precio</td>
+                <td>@producto.Categoria</td>
+                <td>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#productoModal" data-id="@producto.Id" data-nombre="@producto.Nombre" data-descripcion="@producto.Descripcion" data-precio="@producto.Precio" data-categoria="@producto.Categoria">Ver detalles</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal para ver detalles -->
+<div class="modal fade" id="productoModal" tabindex="-1" role="dialog" aria-labelledby="productoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productoModalLabel">Detalles del Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nombre:</strong> <span id="modalNombre"></span></p>
+                <p><strong>Descripción:</strong> <span id="modalDescripcion"></span></p>
+                <p><strong>Precio:</strong> <span id="modalPrecio"></span></p>
+                <p><strong>Categoría:</strong> <span id="modalCategoria"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Función de búsqueda en tiempo real
+        function buscarProductos() {
+            var input = document.getElementById("search");
+            var filter = input.value.toLowerCase();
+            var table = document.getElementById("tablaProductos");
+            var rows = table.getElementsByTagName("tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                var nombre = rows[i].getElementsByTagName("td")[0];
+                if (nombre) {
+                    var textValue = nombre.textContent || nombre.innerText;
+                    rows[i].style.display = textValue.toLowerCase().includes(filter) ? "" : "none";
+                }
+            }
+        }
+
+        // Cargar detalles del producto en el modal
+        $('#productoModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que abrió el modal
+            var nombre = button.data('nombre');
+            var descripcion = button.data('descripcion');
+            var precio = button.data('precio');
+            var categoria = button.data('categoria');
+
+            // Actualizar el contenido del modal
+            $('#modalNombre').text(nombre);
+            $('#modalDescripcion').text(descripcion);
+            $('#modalPrecio').text(precio);
+            $('#modalCategoria').text(categoria);
+        });
+    </script>
+}
